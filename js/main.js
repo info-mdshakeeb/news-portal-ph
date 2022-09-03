@@ -5,6 +5,7 @@ const loadNavdata = async () => {
 };
 const setManue = async () => {
   const data = await loadNavdata();
+  
   const ul = document.getElementById('navbar-ul-id');
   data.data.news_category.forEach(element => {
     const li = document.createElement('li');
@@ -17,12 +18,12 @@ const setManue = async () => {
 };
 setManue();
 const loadNews = async (id) => {
+  spinner(true);
   const url = ` https://openapi.programming-hero.com/api/news/category/${id} `
   const response = await fetch(url)
   const data = await response.json()
   displayNews(data.data);
   displayNewsLength(data);
-  spinner(true);
 }
 const displayNews = (data) => {
   const newsDiv = document.getElementById('card-container');
@@ -60,6 +61,8 @@ const displayNews = (data) => {
             </div>
           </div>`
     newsDiv.appendChild(createDiv);
+    spinner(false);
+    
     
   })
   
@@ -79,7 +82,9 @@ const displayNewsDetail = (data) => {
 const displayNewsLength = (data) =>{
   const itemFound = document.getElementById('itemFound');
   itemFound.innerHTML =`<p class = "py-3 px-5">${data.data.length} - items found in this category</p>`
-  
+  if(data.data.length == 0){
+    spinner(false);
+  } 
 };
 
 const spinner = isloading => {
