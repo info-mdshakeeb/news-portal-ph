@@ -1,10 +1,10 @@
-const loadManuedata = async () => {
+const loadNavdata = async () => {
   const response = await fetch('https://openapi.programming-hero.com/api/news/categories');
   const data = await response.json();
-  return data;
+  return data; 
 };
 const setManue = async () => {
-  const data = await loadManuedata();
+  const data = await loadNavdata();
   const ul = document.getElementById('navbar-ul-id');
   data.data.news_category.forEach(element => {
     const li = document.createElement('li');
@@ -12,6 +12,7 @@ const setManue = async () => {
     li.innerHTML = `
     <a class="nav-link" onclick="loadNews('${element.category_id}')">${element.category_name}</a> `
     ul.appendChild(li);
+   
   });
 };
 setManue();
@@ -21,6 +22,7 @@ const loadNews = async (id) => {
   const data = await response.json()
   displayNews(data.data);
   displayNewsLength(data);
+  spinner(true);
 }
 const displayNews = (data) => {
   const newsDiv = document.getElementById('card-container');
@@ -58,7 +60,9 @@ const displayNews = (data) => {
             </div>
           </div>`
     newsDiv.appendChild(createDiv);
+    
   })
+  
 };
 const loadNewsDetail = async (news_id) => {
   const url = `https://openapi.programming-hero.com/api/news/${news_id}`
@@ -75,4 +79,14 @@ const displayNewsDetail = (data) => {
 const displayNewsLength = (data) =>{
   const itemFound = document.getElementById('itemFound');
   itemFound.innerHTML =`<p class = "py-3 px-5">${data.data.length} - items found in this category</p>`
+  
 };
+
+const spinner = isloading => {
+  const loading = document.getElementById('spinnerId');
+  if(isloading){
+    loading.classList.remove('d-none');
+  } else{
+    loading.classList.add('d-none');
+  }
+}
