@@ -2,7 +2,7 @@ const loadManuedata = async () => {
   const response = await fetch('https://openapi.programming-hero.com/api/news/categories');
   const data = await response.json();
   return data;
-}
+};
 const setManue = async () => {
   const data = await loadManuedata();
   const ul = document.getElementById('navbar-ul-id');
@@ -20,6 +20,7 @@ const loadNews = async (id) => {
   const response = await fetch(url)
   const data = await response.json()
   displayNews(data.data);
+  displayNewsLength(data);
 }
 const displayNews = (data) => {
   const newsDiv = document.getElementById('card-container');
@@ -64,12 +65,14 @@ const loadNewsDetail = async (news_id) => {
   const response = await fetch(url)
   const data = await response.json()
   displayNewsDetail(data.data[0]);
-}
-
+};
 const displayNewsDetail = (data) => {
-  console.log(data)
   const modalTitle = document.getElementById('exampleModalLabel');
   modalTitle.innerText = `${data.title}`
   const modalBOdy = document.getElementById('modalBody');
   modalBOdy.innerHTML = `<p>${data.details}</p>`
+};
+const displayNewsLength = (data) =>{
+  const itemFound = document.getElementById('itemFound');
+  itemFound.innerHTML =`<p class = "py-3 px-5">${data.data.length} - items found in this category</p>`
 };
