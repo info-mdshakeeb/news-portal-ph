@@ -10,31 +10,31 @@ const setManue = async () => {
         const li = document.createElement('li');
         li.classList.add('nav-item')
         li.innerHTML = `
-    <a class="nav-link ">${element.category_name}</a> `
+    <a class="nav-link" onclick="loadNews('${element.category_id}')">${element.category_name}</a> `
         ul.appendChild(li);
-    });
-}
+    });   
+};
 setManue();
-const loadNews = async () => {
-    const response = await fetch('https://openapi.programming-hero.com/api/news/category/01');
-    const data = await response.json();
-    return data;
+
+const loadNews =  (id) => {
+    const url =` https://openapi.programming-hero.com/api/news/category/${id} `
+    fetch(url)
+    .then(res => res.json())
+    .then(data => displayNews(data))
 }
-const displayNews = async () =>{
-    const data = await loadNews();
+const displayNews =async  (id) =>{
     const newsDiv = document.getElementById('card-container');
-    data.data.forEach(element =>{
+    newsDiv.innerHTML=``;
+    id.data.forEach(element =>{
         const {title,details,author,total_view,image_url} = element;
     const createDiv =document.createElement('div');
     createDiv.classList.add('card','my-3')
     createDiv.innerHTML = `
-    <div class="row">
+            <div class="row">
             <div class="col-md-4">
               <img
                 class="img-fluid rounded-start"
-                alt="..."
-                src="${image_url}"
-              />
+                alt="..."src="${image_url}"/>
             </div>
             <div class="col-md-8">
               <div class="card-body">
@@ -51,29 +51,13 @@ const displayNews = async () =>{
                   <i class="fa-solid fa-eye"></i>
                   ${total_view}</div>
                   <div class="col-md-3">
-                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="readFullMessage('${author.img}','${author.name}','${author.published_date}')">Author Detail</button>
+                  <button id='modal_btn' class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >Author Detail</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>`
+          
     newsDiv.appendChild(createDiv);
     })
 };
-const readFullMessage = (img, name, date) =>{
-    const moduleDiv = document.getElementById('module');
-    const createDiv = document.createElement('div');
-    moduleDiv.textContent = '';
-    createDiv.innerHTML =`
-                <div class="card border-0">
-                  <img src="${img}" class="card-img-top" alt="..." />
-                  <div class="card-body">
-                    <h5 class="card-title">"${name}"</h5>
-                    <p class="card-text">
-                     "${date}"
-                    </p>
-                  </div>
-                </div>`
-    moduleDiv.appendChild(createDiv);
-  }
-displayNews();
